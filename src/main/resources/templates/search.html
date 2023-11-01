@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        .location-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div th:each="location : ${place.hits}">
+    <div class="location-card">
+        <h3 th:text="${location.name}"></h3>
+        <p th:if="${location.country != null}">Country: <span th:text="${location.country}"></span></p>
+        <p th:if="${location.city != null}">City: <span th:text="${location.city}"></span></p>
+        <p th:if="${location.street != null}">Street: <span th:text="${location.street}"></span></p>
+        <p th:if="${location.state != null}">State: <span th:text="${location.state}"></span></p>
+        <p th:if="${location.postcode != null}">Postcode: <span th:text="${location.postcode}"></span></p>
+        <p>Latitude: <span th:text="${location.point.lat}"></span></p>
+        <p>Longitude: <span th:text="${location.point.lng}"></span></p>
+        <form th:action="@{/weather}" method="post">
+            <input type="hidden" name="lng" th:value="${location.point.lng}" />
+            <input type="hidden" name="lat" th:value="${location.point.lat}" />
+            <button type="submit">Get Weather</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
