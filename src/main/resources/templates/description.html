@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${name}"></title>
+    <style>
+        body {
+            background-color: #FFE4B5;
+            font-family: "Cascadia Code", monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .place-card {
+            text-align: center;
+            font-size: 24px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
+            margin: 20px;
+            width: 400px;
+        }
+
+        .place-card h1 {
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .place-card p {
+            margin: 10px;
+        }
+
+        .place-card a {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-family: 'Cascadia Code', monospace;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .place-card a:hover {
+            background-color: #FFC72C;
+        }
+    </style>
+</head>
+<body>
+<div th:if="${description != null}" class="place-card">
+    <h1 th:text="${description.title}"></h1>
+    <p th:if="${description.address != null}">Address: <span th:text="${description.address}"></span></p>
+    <p th:if="${description.timetable != null}">Timetable: <span th:text="${description.timetable}"></span></p>
+    <p th:if="${description.phone != null}">Phone: <span th:text="${description.phone}"></span></p>
+    <p th:if="${description.description != null}">Description: <span th:text="${description.description}"></span></p>
+    <p>
+        <a th:href="${description.siteUrl}" target="_blank">Перейти на сайт</a>
+    </p>
+</div>
+</body>
+</html>

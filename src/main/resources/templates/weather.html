@@ -5,18 +5,18 @@
     <title>Weather</title>
     <style>
         body {
-            background-color: #FFE4B5; /* Бежевый цвет фона */
+            background-color: #FFE4B5;
         }
 
         .weather-container {
             text-align: center;
             font-size: 24px;
-            background-color: white; /* Белый фон */
+            background-color: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
             margin: 20px auto;
-            width: 300px; /* Укажите желаемую ширину контейнера */
+            width: 400px;
         }
 
         .weather-icon {
@@ -26,17 +26,35 @@
 
         .weather-details {
             margin-top: 20px;
-            font-family: 'Cascadia Code', monospace; /* Используйте шрифт Cascadia Code */
+            font-family: 'Cascadia Code', monospace;
         }
 
         .weather-details p {
             margin: 10px;
         }
+
+        .more-info-button {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 20px;
+            font-family: 'Cascadia Code', monospace;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            margin-top: 20px;
+        }
+
+        .more-info-button:hover {
+            background-color: #FFC72C;
+        }
+
     </style>
 </head>
 <body>
 <div class="weather-container">
-    <h1 th:text="${weather.name}">City Name</h1>
+    <h1 th:text="${weather != null ? weather.name : 'City Name'}">City Name</h1>
     <p th:text="${weather.sys.country + ', ' + weather.name}"></p>
     <img class="weather-icon" th:src="'https://openweathermap.org/img/wn/' + ${weather.weather[0].getIcon()} + '@2x.png'" alt="Weather Icon"/>
     <div class="weather-details">
@@ -46,6 +64,14 @@
         <p>Давление: <span th:text="${weather.main.pressure}"></span> мм. рт. ст.</p>
         <p>Влажность: <span th:text="${weather.main.humidity}"></span>%</p>
     </div>
+    <form th:action="@{/interesting-places}" method="post">
+        <input type="hidden" name="lng" th:value="${weather.coord.lon}" />
+        <input type="hidden" name="lat" th:value="${weather.coord.lat}" />
+        <button type="submit" class="more-info-button">
+            Get more info
+        </button>
+    </form>
+
 </div>
 </body>
 </html>

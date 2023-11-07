@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body {
+      background-color: #FFE4B5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Cascadia Code', monospace;
+    }
+
+    .places-list-container {
+      max-width: 1200px;
+      width: 100%;
+      overflow: auto;
+    }
+
+    .places-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .place-card {
+      text-align: center;
+      font-size: 24px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
+      margin: 20px;
+      width: calc(33.33% - 40px);
+      height: auto;
+      overflow: hidden;
+    }
+
+    .place-card h3 {
+      font-family: 'Cascadia Code', monospace;
+    }
+
+    .place-card p {
+      margin: 10px;
+      text-align: center;
+    }
+
+    .place-card a {
+      background-color: #FFD700;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-family: 'Cascadia Code', monospace;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .place-card a:hover {
+      background-color: #FFC72C;
+    }
+    .more-info-button {
+      background-color: #FFD700;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 20px;
+      font-family: 'Cascadia Code', monospace;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+      margin-top: 20px;
+    }
+
+    .more-info-button:hover {
+      background-color: #FFC72C;
+    }
+
+  </style>
+</head>
+<body>
+<div th:if="${places != null}">
+  <div class="places-list-container">
+    <div class="places-list">
+      <div th:each="place : ${places.getPlaces()}" class="place-card">
+        <h3 th:text="${place.getTitle()}">Place name</h3>
+        <p th:if="${place.address != null}">Address: <span th:text="${place.address}"></span></p>
+        <p th:if="${place.location != null}">Location: <span th:text="${place.location}"></span></p>
+        <p th:if="${place.phone != null}">Phone: <span th:text="${place.phone}"></span></p>
+        <p th:if="${place.siteUrl != null}">Website: <a th:href="${place.siteUrl}" th:text="${place.siteUrl}"></a></p>
+        <p th:if="${place.subway != null}">Nearest Subway: <span th:text="${place.subway}"></span></p>
+        <p th:if="${place.hasParkingLot}">Parking Available</p>
+        <form th:action="@{'/description'}" method="post">
+          <input type="hidden" name="id" th:value="${place.getId()}" />
+          <button type="submit" class="more-info-button">
+            Learn more
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:unless="${places != null}" style="text-align: center;">
+  <h3>No interesting places</h3>
+</div>
+</body>
+</html>

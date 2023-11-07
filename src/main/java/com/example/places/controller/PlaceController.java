@@ -1,6 +1,8 @@
 package com.example.places.controller;
 
+import com.example.places.dto.DescriptionDTO;
 import com.example.places.dto.LocationDTO;
+import com.example.places.dto.PlacesDTO;
 import com.example.places.dto.WeatherDTO;
 import com.example.places.service.PlaceService;
 import org.springframework.stereotype.Controller;
@@ -18,15 +20,13 @@ import java.util.concurrent.CompletableFuture;
 public class PlaceController {
 
     private final PlaceService placeService;
-    private CompletableFuture<LocationDTO> locationDTOCompletableFuture;
-    private CompletableFuture<WeatherDTO> weatherDTOCompletableFuture;
 
     public PlaceController(PlaceService placeService) {
         this.placeService = placeService;
     }
 
     @GetMapping("/places")
-    public String places(){
+    public String places() {
         return "form";
     }
 
@@ -34,7 +34,7 @@ public class PlaceController {
     public CompletableFuture<String> search(@RequestParam String placeName, Model model) throws IOException {
         model.addAttribute("placeName", placeName);
 
-        locationDTOCompletableFuture = placeService.getLocations(placeName);
+        CompletableFuture<LocationDTO> locationDTOCompletableFuture = placeService.getLocations(placeName);
 
         return locationDTOCompletableFuture.thenApplyAsync(result -> {
             model.addAttribute("place", result);
@@ -42,23 +42,10 @@ public class PlaceController {
         });
     }
 
-    //TODO: Добавить вывод погоды в локации, интересных мест, описания локации
 
     @PostMapping("/weather")
     public CompletableFuture<String> weather(@RequestParam Double lng, @RequestParam Double lat, Model model) throws IOException {
-/*
-        CompletableFuture<LocationDTO.Hit> hitDTOCompletableFuture = locationDTOCompletableFuture.thenApplyAsync(result ->{
-           return result.getHits().stream()
-                   .filter(hit ->Double.compare(hit.getPoint().getLng(), lng) == 0 && Double.compare(hit.getPoint().getLat(), lat) == 0)
-                   .findFirst()
-                   .orElse(null);
-        });
-
-
-        //TODO: ворачиваем отображение выбранной локации и её погоды
-*/
-
-        weatherDTOCompletableFuture = placeService.getWeather(lng, lat);
+        CompletableFuture<WeatherDTO> weatherDTOCompletableFuture = placeService.getWeather(lng, lat);
 
         return weatherDTOCompletableFuture.thenApplyAsync(result -> {
             model.addAttribute("weather", result);
@@ -68,6 +55,27 @@ public class PlaceController {
             model.addAttribute("roundedTemperature", roundedTemperature);
 
             return "weather";
+        });
+    }
+
+    @PostMapping("interesting-places")
+    public CompletableFuture<String> interestingPlaces(@RequestParam Double lng, @RequestParam Double lat, Model model) throws IOException {
+        CompletableFuture<PlacesDTO> placesDTOCompletableFuture = placeService.getPlaces(lng, lat);
+
+        return placesDTOCompletableFuture.thenApplyAsync(result -> {
+            model.addAttribute("places", result);
+            return "places";
+        });
+    }
+
+    @PostMapping("description")
+    public CompletableFuture<String> description(@RequestParam int id, Model model) throws IOException {
+        CompletableFuture<DescriptionDTO> descriptionDTOCompletableFuture = placeService.getDescription(id);
+
+        return descriptionDTOCompletableFuture.thenApplyAsync(result -> {
+           model.addAttribute("description", result);
+
+           return "description";
         });
     }
 }

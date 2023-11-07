@@ -4,17 +4,57 @@
     <meta charset="UTF-8">
     <title>Search Results</title>
     <style>
+        body {
+            background-color: #FFE4B5;
+            font-family: 'Cascadia Code', monospace;
+        }
+
+        .location-container {
+            text-align: center;
+            margin: 20px auto;
+            width: 400px;
+        }
+
         .location-card {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .location-card h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .location-card p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .location-card button {
+            background-color: #FFD700;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .location-card button:hover {
+            background-color: #FFC72C;
         }
     </style>
 </head>
 <body>
-<div th:each="location : ${place.hits}">
-    <div class="location-card">
+<div class="location-container">
+    <div th:each="location : ${place.hits}" class="location-card">
         <h3 th:text="${location.name}"></h3>
         <p th:if="${location.country != null}">Country: <span th:text="${location.country}"></span></p>
         <p th:if="${location.city != null}">City: <span th:text="${location.city}"></span></p>
@@ -23,10 +63,10 @@
         <p th:if="${location.postcode != null}">Postcode: <span th:text="${location.postcode}"></span></p>
         <p>Latitude: <span th:text="${location.point.lat}"></span></p>
         <p>Longitude: <span th:text="${location.point.lng}"></span></p>
-        <form th:action="@{/weather}" method="post">
+        <form th:action="@{/weather}" method="post" style="margin-top: 10px;">
             <input type="hidden" name="lng" th:value="${location.point.lng}" />
             <input type="hidden" name="lat" th:value="${location.point.lat}" />
-            <button type="submit">Get Weather</button>
+            <button type="submit">Get weather</button>
         </form>
     </div>
 </div>
